@@ -4,17 +4,17 @@ import React, { useState } from 'react';
 import { useAuth } from './providers/AuthProvider';
 
 export function LandingPage() {
-  const { signInWithGoogle, signInAnonymously } = useAuth();
+  const { deployWithGoogle, deployAnonymous } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleGoogleSignIn = async () => {
+  const handleGoogleDeploy = async () => {
     setIsLoading(true);
     try {
-      await signInWithGoogle();
-      // Force navigation to dashboard
+      await deployWithGoogle();
+      // Force navigation to command center
       window.location.href = '/dashboard';
     } catch (error) {
-      console.error('Sign in failed:', error);
+      console.error('Deployment failed:', error);
       alert('Mission continues - access granted!');
       window.location.href = '/dashboard';
     } finally {
@@ -22,14 +22,14 @@ export function LandingPage() {
     }
   };
 
-  const handleAnonymousSignIn = async () => {
+  const handleStealthDeploy = async () => {
     setIsLoading(true);
     try {
-      await signInAnonymously();
-      // Force navigation to dashboard
+      await deployAnonymous();
+      // Force navigation to command center
       window.location.href = '/dashboard';
     } catch (error) {
-      console.error('Anonymous sign in failed:', error);
+      console.error('Stealth deployment failed:', error);
       alert('Mission continues - access granted!');
       window.location.href = '/dashboard';
     } finally {
@@ -79,7 +79,7 @@ export function LandingPage() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <button 
-              onClick={handleGoogleSignIn}
+              onClick={handleGoogleDeploy}
               disabled={isLoading}
               className="bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white px-8 py-4 text-lg rounded-none border-2 border-red-500 transition-all font-mono min-w-[200px] shadow-warrior-glow hover:shadow-red-500/50"
             >
@@ -88,7 +88,7 @@ export function LandingPage() {
             </button>
             
             <button 
-              onClick={handleAnonymousSignIn}
+              onClick={handleStealthDeploy}
               disabled={isLoading}
               className="bg-gray-800 hover:bg-gray-700 disabled:opacity-50 text-white px-8 py-4 text-lg rounded-none border-2 border-gray-600 transition-all font-mono min-w-[200px]"
             >

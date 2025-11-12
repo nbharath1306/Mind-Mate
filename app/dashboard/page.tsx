@@ -4,16 +4,20 @@ import React, { useState } from 'react';
 import { useAuth } from '../../components/providers/AuthProvider';
 
 export default function Dashboard() {
-  const { user, logout } = useAuth();
+  const { warrior, extract } = useAuth();
   const [currentView, setCurrentView] = useState('command');
 
-  // Create demo user if not authenticated
-  const displayUser = user || {
-    displayName: 'OPERATOR',
-    callSign: 'ALPHA-7',
+  // Create demo warrior if not authenticated
+  const displayWarrior = warrior || {
+    id: 'demo-warrior',
+    callsign: 'Demo-Alpha-001',
+    isAnonymous: false,
+    rank: 'SOLDIER' as const,
+    deployedAt: new Date(),
+    lastSeen: new Date()
   };
 
-  const callSign = 'callSign' in displayUser ? displayUser.callSign : 'ALPHA-7';
+  const callSign = displayWarrior.callsign || 'ALPHA-7';
 
   const navigationItems = [
     { id: 'command', label: 'COMMAND CENTER', icon: '▣', desc: 'Mission Control' },
@@ -244,14 +248,14 @@ export default function Dashboard() {
           
           <div className="flex items-center space-x-4">
             <div className="text-right">
-              <div className="text-green-400 font-mono text-sm">OPERATOR: {displayUser.displayName}</div>
+              <div className="text-green-400 font-mono text-sm">OPERATOR: {callSign}</div>
               <div className="text-gray-400 font-mono text-xs">CLEARANCE: ALPHA</div>
             </div>
             <button
-              onClick={user ? logout : () => window.location.href = '/'}
-              className="bg-red-700 hover:bg-red-600 text-white font-mono px-4 py-2 border border-red-500 transition-colors"
+              onClick={warrior ? extract : () => window.location.href = '/'}
+              className="bg-red-600/20 border border-red-600 text-red-500 px-4 py-2 text-sm rounded-none hover:bg-red-600/30 transition-all font-mono"
             >
-              {user ? '◀ SIGN OUT' : '◀ RETURN TO BASE'}
+              {warrior ? '◀ EXTRACT' : '◀ RETURN TO BASE'}
             </button>
           </div>
         </div>

@@ -1,93 +1,107 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
-// Mock Firebase for now - will implement real Firebase later
-interface User {
+// Tactical Warrior Auth System
+interface Warrior {
   id: string;
+  callsign?: string;
   email?: string;
-  displayName?: string;
   isAnonymous: boolean;
-  createdAt: Date;
-  lastLogin: Date;
+  rank: 'RECRUIT' | 'SOLDIER' | 'VETERAN' | 'COMMANDER';
+  deployedAt: Date;
+  lastSeen: Date;
 }
 
-interface AuthContextType {
-  user: User | null;
+interface TacticalAuthType {
+  warrior: Warrior | null;
   loading: boolean;
-  signInWithGoogle: () => Promise<void>;
-  signInAnonymously: () => Promise<void>;
-  logout: () => Promise<void>;
+  deployWithGoogle: () => Promise<void>;
+  deployAnonymous: () => Promise<void>;
+  extract: () => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const TacticalAuthContext = createContext<TacticalAuthType | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+export function TacticalAuthProvider({ children }: { children: React.ReactNode }) {
+  const [warrior, setWarrior] = useState<Warrior | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const handleSignInWithGoogle = async () => {
+  const deployWithGoogle = async () => {
+    setLoading(true);
     try {
-      // Mock Google sign-in
-      const mockUser: User = {
-        id: 'user_123',
-        email: 'demo@example.com',
-        displayName: 'Demo User',
+      // Simulate tactical deployment
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      const newWarrior: Warrior = {
+        id: `warrior-${Date.now()}`,
+        callsign: 'Alpha-' + Math.floor(Math.random() * 1000),
+        email: 'classified@tactical.ops',
         isAnonymous: false,
-        createdAt: new Date(),
-        lastLogin: new Date(),
+        rank: 'SOLDIER',
+        deployedAt: new Date(),
+        lastSeen: new Date()
       };
-      setUser(mockUser);
-      window.location.href = '/dashboard';
+      
+      setWarrior(newWarrior);
+      localStorage.setItem('tactical-warrior', JSON.stringify(newWarrior));
     } catch (error) {
-      console.error('Error signing in with Google:', error);
+      console.error('Deployment failed:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleSignInAnonymously = async () => {
+  const deployAnonymous = async () => {
+    setLoading(true);
     try {
-      // Mock anonymous sign-in
-      const mockUser: User = {
-        id: 'anon_123',
+      // Simulate stealth deployment
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      const stealthWarrior: Warrior = {
+        id: `stealth-${Date.now()}`,
+        callsign: 'Ghost-' + Math.floor(Math.random() * 1000),
         isAnonymous: true,
-        createdAt: new Date(),
-        lastLogin: new Date(),
+        rank: 'RECRUIT',
+        deployedAt: new Date(),
+        lastSeen: new Date()
       };
-      setUser(mockUser);
-      window.location.href = '/dashboard';
+      
+      setWarrior(stealthWarrior);
+      localStorage.setItem('tactical-warrior', JSON.stringify(stealthWarrior));
     } catch (error) {
-      console.error('Error signing in anonymously:', error);
+      console.error('Stealth deployment failed:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleLogout = async () => {
-    try {
-      setUser(null);
-      window.location.href = '/';
-    } catch (error) {
-      console.error('Error signing out:', error);
-    }
-  };
-
-  const value: AuthContextType = {
-    user,
-    loading,
-    signInWithGoogle: handleSignInWithGoogle,
-    signInAnonymously: handleSignInAnonymously,
-    logout: handleLogout,
+  const extract = async () => {
+    setWarrior(null);
+    localStorage.removeItem('tactical-warrior');
   };
 
   return (
-    <AuthContext.Provider value={value}>
+    <TacticalAuthContext.Provider value={{ 
+      warrior, 
+      loading, 
+      deployWithGoogle,
+      deployAnonymous, 
+      extract 
+    }}>
       {children}
-    </AuthContext.Provider>
+    </TacticalAuthContext.Provider>
   );
 }
 
-export function useAuth() {
-  const context = useContext(AuthContext);
+export function useTacticalAuth() {
+  const context = useContext(TacticalAuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error('useTacticalAuth must be used within a TacticalAuthProvider');
   }
   return context;
 }
+
+// Legacy compatibility
+export const AuthProvider = TacticalAuthProvider;
+export const useAuth = useTacticalAuth;

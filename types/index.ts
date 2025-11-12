@@ -1,119 +1,123 @@
-export interface User {
+// Tactical MindMate Types
+
+export interface Warrior {
   id: string;
+  callsign?: string;
   email?: string;
-  displayName?: string;
   isAnonymous: boolean;
-  createdAt: Date;
-  lastLogin: Date;
+  rank: 'RECRUIT' | 'SOLDIER' | 'VETERAN' | 'COMMANDER';
+  deployedAt: Date;
+  lastSeen: Date;
 }
 
-export interface MoodEntry {
+export interface MissionLog {
   id: string;
-  userId: string;
-  mood: 1 | 2 | 3 | 4 | 5; // 1 = Very Low, 5 = Great
-  moodLabel: 'Very Low' | 'Low' | 'Okay' | 'Good' | 'Great';
+  warriorId: string;
+  missionType: 'RECON' | 'ASSAULT' | 'DEFENSE' | 'RECOVERY' | 'STEALTH';
+  status: 1 | 2 | 3 | 4 | 5; // 1 = CRITICAL, 5 = VICTORIOUS
+  statusLabel: 'CRITICAL' | 'DAMAGED' | 'OPERATIONAL' | 'STRONG' | 'VICTORIOUS';
   note?: string;
-  createdAt: Date;
+  timestamp: Date;
 }
 
-export interface JournalEntry {
+export interface WarLog {
   id: string;
-  userId: string;
+  warriorId: string;
   title: string;
   content: string;
   prompt?: string;
   tags: string[];
-  mood?: number;
-  isPrivate: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  threatLevel?: number;
+  classified: boolean;
+  timestamp: Date;
+  lastModified: Date;
 }
 
-export interface CommunityPost {
+export interface BrotherhoodPost {
   id: string;
-  userId: string;
-  authorName: string; // Anonymous names like "Anonymous Warrior", "Mindful Student"
+  warriorId: string;
+  callsign: string;
   title: string;
   content: string;
-  category: 'study-stress' | 'relationships' | 'career' | 'motivation' | 'general' | 'fitness' | 'anxiety';
+  category: 'combat-stress' | 'brotherhood' | 'tactical' | 'motivation' | 'general' | 'fitness' | 'mental-armor';
   tags: string[];
-  likes: number;
-  likedBy: string[];
-  replies: CommunityReply[];
-  isAnonymous: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  support: number;
+  supportedBy: string[];
+  replies: BrotherhoodReply[];
+  stealth: boolean;
+  timestamp: Date;
+  lastModified: Date;
 }
 
-export interface CommunityReply {
+export interface BrotherhoodReply {
   id: string;
-  userId: string;
-  authorName: string;
+  warriorId: string;
+  callsign: string;
   content: string;
-  likes: number;
-  likedBy: string[];
-  createdAt: Date;
+  support: number;
+  supportedBy: string[];
+  timestamp: Date;
 }
 
-export interface GrowthCapsule {
+export interface TacticalModule {
   id: string;
-  title: string;
+  codename: string;
   description: string;
   content: string;
   audioUrl?: string;
   imageUrl?: string;
-  category: 'confidence' | 'focus' | 'habits' | 'stress-relief' | 'motivation' | 'mindfulness';
+  category: 'discipline' | 'focus' | 'habits' | 'stress-ops' | 'motivation' | 'mental-armor';
   duration: number; // in minutes
-  isPremium: boolean;
+  classified: boolean;
   tags: string[];
-  views: number;
-  likes: number;
-  createdAt: Date;
+  accessed: number;
+  endorsed: number;
+  deployed: Date;
 }
 
-export interface UserStats {
-  userId: string;
-  journalStreak: number;
-  moodTrackedDays: number;
-  totalJournalEntries: number;
-  totalMoodEntries: number;
-  communityPosts: number;
-  communityLikes: number;
-  joinedAt: Date;
-  lastActivity: Date;
+export interface WarriorStats {
+  warriorId: string;
+  missionStreak: number;
+  logsDays: number;
+  totalLogs: number;
+  totalMissions: number;
+  brotherhoodPosts: number;
+  supportGiven: number;
+  deployedAt: Date;
+  lastActive: Date;
 }
 
-export type MoodColor = {
+export type ThreatLevel = {
   bg: string;
   text: string;
-  emoji: string;
+  icon: string;
 };
 
-export type ThemeMode = 'light' | 'dark';
+export type TacticalMode = 'stealth' | 'assault';
 
-export interface NotificationPreferences {
-  dailyReminder: boolean;
-  journalReminder: boolean;
-  communityUpdates: boolean;
-  moodCheckIn: boolean;
-  reminderTime: string; // HH:MM format
+export interface CommPreferences {
+  dailyBriefing: boolean;
+  missionReminder: boolean;
+  brotherhoodUpdates: boolean;
+  statusCheck: boolean;
+  briefingTime: string; // HH:MM format
 }
 
-export interface UserProfile {
-  userId: string;
+export interface WarriorProfile {
+  warriorId: string;
   preferences: {
-    theme: ThemeMode;
-    notifications: NotificationPreferences;
-    privacy: {
-      showInCommunity: boolean;
-      allowDirectMessages: boolean;
+    mode: TacticalMode;
+    communications: CommPreferences;
+    opsec: {
+      visibleToBrotherhood: boolean;
+      allowDirectComms: boolean;
     };
   };
-  goals: {
-    journalFrequency: 'daily' | 'weekly' | 'custom';
-    moodTracking: boolean;
-    communityParticipation: boolean;
+  objectives: {
+    logFrequency: 'daily' | 'weekly' | 'mission-based';
+    statusTracking: boolean;
+    brotherhoodActive: boolean;
   };
-  createdAt: Date;
-  updatedAt: Date;
+  deployedAt: Date;
+  lastUpdate: Date;
 }
