@@ -1,0 +1,726 @@
+'use client';
+
+import React, { useState } from 'react';
+import { useAuth } from '../../components/providers/AuthProvider';
+
+export default function Dashboard() {
+  const { user, logout } = useAuth();
+  const [currentView, setCurrentView] = useState('overview');
+  const [moodToday, setMoodToday] = useState('');
+  const [journalEntry, setJournalEntry] = useState('');
+  const [gratitudeEntry, setGratitudeEntry] = useState('');
+  const [newHabit, setNewHabit] = useState('');
+
+  // Sample data that would come from database/storage
+  const dailyQuote = {
+    text: "The strongest men are not those who show strength in front of the world, but those who win battles we know nothing about.",
+    author: "Unknown"
+  };
+
+  const mentalHealthFact = "Regular exercise releases endorphins that can improve mood by 40-60%. Just 20 minutes of physical activity can make a significant difference.";
+
+  const habits = [
+    { id: 1, name: 'Morning Exercise', streak: 7, completed: true, category: 'Physical' },
+    { id: 2, name: 'Read 20 pages', streak: 12, completed: false, category: 'Mental' },
+    { id: 3, name: 'Meditation', streak: 5, completed: true, category: 'Mental' },
+    { id: 4, name: 'No Social Media', streak: 3, completed: false, category: 'Digital' },
+    { id: 5, name: 'Journal Writing', streak: 14, completed: true, category: 'Emotional' }
+  ];
+
+  const bookRecommendations = [
+    { title: "Can't Hurt Me", author: "David Goggins", category: "Mental Toughness", rating: 4.8 },
+    { title: "12 Rules for Life", author: "Jordan Peterson", category: "Philosophy", rating: 4.7 },
+    { title: "The Way of Men", author: "Jack Donovan", category: "Masculinity", rating: 4.5 },
+    { title: "Atomic Habits", author: "James Clear", category: "Self-Improvement", rating: 4.9 }
+  ];
+
+  const handleHabitToggle = (habitId: number) => {
+    alert(`Habit ${habitId} toggled!`);
+  };
+
+  const handleAddHabit = () => {
+    if (newHabit.trim()) {
+      alert(`New habit added: ${newHabit}`);
+      setNewHabit('');
+    }
+  };
+
+  const navigationItems = [
+    { id: 'overview', label: 'Dashboard', icon: '🏠' },
+    { id: 'quotes', label: 'Daily Inspiration', icon: '💫' },
+    { id: 'habits', label: 'Habit Tracker', icon: '🎯' },
+    { id: 'growth', label: 'Growth Viz', icon: '📈' },
+    { id: 'journal', label: 'AI Journal', icon: '🧠' },
+    { id: 'books', label: 'Reading List', icon: '📚' },
+    { id: 'gratitude', label: 'Gratitude', icon: '🙏' },
+    { id: 'learning', label: 'Learn & Apply', icon: '🎓' },
+    { id: 'focus', label: 'Focus Zone', icon: '🎧' },
+    { id: 'minimalism', label: 'Simplify', icon: '🧘' },
+    { id: 'community', label: 'Brotherhood', icon: '👥' }
+  ];
+
+  const renderOverview = () => (
+    <div className="space-y-6">
+      {/* Daily Quote & Fact */}
+      <div className="grid md:grid-cols-2 gap-6">
+        <div className="bg-gradient-to-br from-blue-900 to-blue-800 rounded-lg p-6 text-white">
+          <h3 className="text-lg font-semibold mb-3 flex items-center">
+            <span className="mr-2">💫</span>
+            Daily Inspiration
+          </h3>
+          <blockquote className="text-sm italic mb-2">"{dailyQuote.text}"</blockquote>
+          <p className="text-blue-200 text-xs">— {dailyQuote.author}</p>
+        </div>
+
+        <div className="bg-gradient-to-br from-teal-900 to-teal-800 rounded-lg p-6 text-white">
+          <h3 className="text-lg font-semibold mb-3 flex items-center">
+            <span className="mr-2">🧠</span>
+            Mental Health Fact
+          </h3>
+          <p className="text-sm">{mentalHealthFact}</p>
+        </div>
+      </div>
+
+      {/* Quick Stats */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="bg-slate-800 rounded-lg p-4 text-center">
+          <div className="text-2xl font-bold text-green-400">85%</div>
+          <div className="text-sm text-gray-400">Habit Success</div>
+        </div>
+        <div className="bg-slate-800 rounded-lg p-4 text-center">
+          <div className="text-2xl font-bold text-blue-400">12</div>
+          <div className="text-sm text-gray-400">Day Streak</div>
+        </div>
+        <div className="bg-slate-800 rounded-lg p-4 text-center">
+          <div className="text-2xl font-bold text-purple-400">47</div>
+          <div className="text-sm text-gray-400">Journal Entries</div>
+        </div>
+        <div className="bg-slate-800 rounded-lg p-4 text-center">
+          <div className="text-2xl font-bold text-teal-400">3.2h</div>
+          <div className="text-sm text-gray-400">Focus Time</div>
+        </div>
+      </div>
+
+      {/* Today's Habits Quick View */}
+      <div className="bg-slate-800 rounded-lg p-6">
+        <h3 className="text-xl font-semibold mb-4 flex items-center">
+          <span className="mr-2">🎯</span>
+          Today's Habits
+        </h3>
+        <div className="space-y-3">
+          {habits.slice(0, 3).map((habit) => (
+            <div key={habit.id} className="flex items-center justify-between p-3 bg-slate-700 rounded-lg">
+              <div className="flex items-center space-x-3">
+                <button
+                  onClick={() => handleHabitToggle(habit.id)}
+                  className={`w-6 h-6 rounded-full border-2 ${
+                    habit.completed
+                      ? 'bg-green-500 border-green-500'
+                      : 'border-gray-400 hover:border-green-400'
+                  }`}
+                >
+                  {habit.completed && <span className="text-white text-sm">✓</span>}
+                </button>
+                <span className="text-white">{habit.name}</span>
+              </div>
+              <div className="text-sm text-gray-400">
+                🔥 {habit.streak} days
+              </div>
+            </div>
+          ))}
+        </div>
+        <button
+          onClick={() => setCurrentView('habits')}
+          className="mt-4 text-blue-400 hover:text-blue-300 text-sm"
+        >
+          View All Habits →
+        </button>
+      </div>
+    </div>
+  );
+
+  const renderQuotes = () => (
+    <div className="space-y-6">
+      <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg p-8 text-center">
+        <h2 className="text-2xl font-bold mb-6 gradient-text">Daily Inspiration</h2>
+        <blockquote className="text-xl italic text-gray-300 mb-4">
+          "{dailyQuote.text}"
+        </blockquote>
+        <p className="text-gray-400">— {dailyQuote.author}</p>
+        <button className="mt-6 bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg">
+          Get New Quote
+        </button>
+      </div>
+
+      <div className="bg-slate-800 rounded-lg p-6">
+        <h3 className="text-xl font-semibold mb-4">Mental Health Facts</h3>
+        <div className="bg-slate-700 rounded-lg p-4 mb-4">
+          <p className="text-gray-300">{mentalHealthFact}</p>
+        </div>
+        <div className="grid md:grid-cols-2 gap-4 text-sm">
+          <div className="bg-slate-700 rounded-lg p-4">
+            <strong className="text-blue-400">💪 Physical Strength:</strong>
+            <p className="text-gray-300 mt-2">Men who exercise regularly report 43% better stress management and improved emotional regulation.</p>
+          </div>
+          <div className="bg-slate-700 rounded-lg p-4">
+            <strong className="text-green-400">🧠 Mental Resilience:</strong>
+            <p className="text-gray-300 mt-2">Journaling for 15 minutes daily can reduce anxiety by up to 37% and improve decision-making clarity.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderHabits = () => (
+    <div className="space-y-6">
+      <div className="bg-slate-800 rounded-lg p-6">
+        <h3 className="text-xl font-semibold mb-4">Habit Tracker</h3>
+        
+        <div className="mb-6">
+          <div className="flex space-x-2 mb-4">
+            <input
+              type="text"
+              value={newHabit}
+              onChange={(e) => setNewHabit(e.target.value)}
+              placeholder="Add new habit..."
+              className="flex-1 bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white"
+            />
+            <button
+              onClick={handleAddHabit}
+              className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg"
+            >
+              Add
+            </button>
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          {habits.map((habit) => (
+            <div key={habit.id} className="bg-slate-700 rounded-lg p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <button
+                    onClick={() => handleHabitToggle(habit.id)}
+                    className={`w-8 h-8 rounded-full border-2 transition-colors ${
+                      habit.completed
+                        ? 'bg-green-500 border-green-500'
+                        : 'border-gray-400 hover:border-green-400'
+                    }`}
+                  >
+                    {habit.completed && <span className="text-white">✓</span>}
+                  </button>
+                  <div>
+                    <h4 className="font-medium text-white">{habit.name}</h4>
+                    <p className="text-sm text-gray-400">{habit.category}</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-lg font-bold text-orange-400">🔥 {habit.streak}</div>
+                  <div className="text-sm text-gray-400">day streak</div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderBooks = () => (
+    <div className="space-y-6">
+      <div className="bg-slate-800 rounded-lg p-6">
+        <h3 className="text-xl font-semibold mb-4">Recommended Reading</h3>
+        <div className="grid md:grid-cols-2 gap-4">
+          {bookRecommendations.map((book, index) => (
+            <div key={index} className="bg-slate-700 rounded-lg p-4">
+              <h4 className="font-semibold text-white mb-2">{book.title}</h4>
+              <p className="text-gray-300 text-sm mb-2">by {book.author}</p>
+              <div className="flex items-center justify-between">
+                <span className="bg-blue-600 text-xs px-2 py-1 rounded">{book.category}</span>
+                <div className="flex items-center">
+                  <span className="text-yellow-400">⭐</span>
+                  <span className="text-sm text-gray-400 ml-1">{book.rating}</span>
+                </div>
+              </div>
+              <button className="mt-3 w-full bg-teal-600 hover:bg-teal-700 text-white py-2 rounded-lg text-sm">
+                Add to Reading List
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderGratitude = () => (
+    <div className="space-y-6">
+      <div className="bg-slate-800 rounded-lg p-6">
+        <h3 className="text-xl font-semibold mb-4">Daily Gratitude</h3>
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-2">What are you grateful for today?</label>
+          <textarea
+            value={gratitudeEntry}
+            onChange={(e) => setGratitudeEntry(e.target.value)}
+            className="w-full h-24 bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none resize-none"
+            placeholder="I'm grateful for..."
+          />
+        </div>
+        <button
+          onClick={() => {
+            if (gratitudeEntry.trim()) {
+              alert('Gratitude saved!');
+              setGratitudeEntry('');
+            }
+          }}
+          disabled={!gratitudeEntry.trim()}
+          className="bg-purple-500 hover:bg-purple-600 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-2 rounded-lg transition-colors"
+        >
+          Save Gratitude
+        </button>
+
+        <div className="mt-6">
+          <h4 className="text-lg font-medium mb-3">Recent Gratitudes</h4>
+          <div className="space-y-2">
+            <div className="bg-slate-700 p-3 rounded-lg">
+              <p className="text-gray-300 text-sm">Grateful for my health and the ability to work on myself daily.</p>
+              <span className="text-xs text-gray-500">Yesterday</span>
+            </div>
+            <div className="bg-slate-700 p-3 rounded-lg">
+              <p className="text-gray-300 text-sm">Thankful for supportive friends who understand the journey.</p>
+              <span className="text-xs text-gray-500">2 days ago</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Demo user fallback
+  if (!user) {
+    const demoUser = {
+      id: 'demo-user',
+      displayName: 'Warrior',
+      email: 'demo@mindmate.com',
+      isAnonymous: false,
+      createdAt: new Date(),
+      lastLogin: new Date(),
+    };
+    
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+        {/* Header */}
+        <header className="bg-slate-800 border-b border-slate-700 px-6 py-4">
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <div className="h-8 w-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                🧠
+              </div>
+              <span className="text-xl font-bold gradient-text">MindMate</span>
+            </div>
+            
+            <div className="flex items-center space-x-4">
+              <span className="text-gray-300">Welcome, {demoUser.displayName}</span>
+              <button
+                onClick={() => window.location.href = '/'}
+                className="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg transition-colors"
+              >
+                Back to Home
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <div className="max-w-7xl mx-auto px-6 py-8 flex gap-8">
+          {/* Sidebar */}
+          <aside className="w-64 flex-shrink-0">
+            <nav className="bg-slate-800 rounded-lg p-4">
+              <ul className="space-y-1">
+                {navigationItems.map((item) => (
+                  <li key={item.id}>
+                    <button
+                      onClick={() => setCurrentView(item.id)}
+                      className={`w-full text-left px-3 py-2 rounded-lg transition-colors text-sm ${
+                        currentView === item.id
+                          ? 'bg-blue-500 text-white'
+                          : 'text-gray-300 hover:bg-slate-700'
+                      }`}
+                    >
+                      <span className="mr-3">{item.icon}</span>
+                      {item.label}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </aside>
+
+          {/* Main Content */}
+          <main className="flex-1">
+            {currentView === 'overview' && renderOverview()}
+            {currentView === 'quotes' && renderQuotes()}
+            {currentView === 'habits' && renderHabits()}
+            {currentView === 'books' && renderBooks()}
+            {currentView === 'gratitude' && renderGratitude()}
+            {currentView === 'journal' && <div className="bg-slate-800 rounded-lg p-6"><h3 className="text-xl font-semibold">AI Journal & Recommendations - Coming Soon</h3></div>}
+            {currentView === 'growth' && <div className="bg-slate-800 rounded-lg p-6"><h3 className="text-xl font-semibold">Growth Visualization - Coming Soon</h3></div>}
+            {currentView === 'learning' && <div className="bg-slate-800 rounded-lg p-6"><h3 className="text-xl font-semibold">Learning & Implementation - Coming Soon</h3></div>}
+            {currentView === 'focus' && <div className="bg-slate-800 rounded-lg p-6"><h3 className="text-xl font-semibold">Focus Zone - Coming Soon</h3></div>}
+            {currentView === 'minimalism' && <div className="bg-slate-800 rounded-lg p-6"><h3 className="text-xl font-semibold">Minimalism Guide - Coming Soon</h3></div>}
+            {currentView === 'community' && <div className="bg-slate-800 rounded-lg p-6"><h3 className="text-xl font-semibold">Brotherhood Community - Coming Soon</h3></div>}
+          </main>
+        </div>
+      </div>
+    );
+  }
+
+  // Authenticated user view (same layout)
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+      {/* Header */}
+      <header className="bg-slate-800 border-b border-slate-700 px-6 py-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <div className="h-8 w-8 bg-blue-500 rounded-lg flex items-center justify-center">
+              🧠
+            </div>
+            <span className="text-xl font-bold gradient-text">MindMate</span>
+          </div>
+          
+          <div className="flex items-center space-x-4">
+            <span className="text-gray-300">Welcome, {user.displayName || 'Warrior'}</span>
+            <button
+              onClick={logout}
+              className="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg transition-colors"
+            >
+              Sign Out
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <div className="max-w-7xl mx-auto px-6 py-8 flex gap-8">
+        {/* Sidebar */}
+        <aside className="w-64 flex-shrink-0">
+          <nav className="bg-slate-800 rounded-lg p-4">
+            <ul className="space-y-1">
+              {navigationItems.map((item) => (
+                <li key={item.id}>
+                  <button
+                    onClick={() => setCurrentView(item.id)}
+                    className={`w-full text-left px-3 py-2 rounded-lg transition-colors text-sm ${
+                      currentView === item.id
+                        ? 'bg-blue-500 text-white'
+                        : 'text-gray-300 hover:bg-slate-700'
+                    }`}
+                  >
+                    <span className="mr-3">{item.icon}</span>
+                    {item.label}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </aside>
+
+        {/* Main Content */}
+        <main className="flex-1">
+          {currentView === 'overview' && renderOverview()}
+          {currentView === 'quotes' && renderQuotes()}
+          {currentView === 'habits' && renderHabits()}
+          {currentView === 'books' && renderBooks()}
+          {currentView === 'gratitude' && renderGratitude()}
+          {currentView === 'journal' && <div className="bg-slate-800 rounded-lg p-6"><h3 className="text-xl font-semibold">AI Journal & Recommendations - Coming Soon</h3></div>}
+          {currentView === 'growth' && <div className="bg-slate-800 rounded-lg p-6"><h3 className="text-xl font-semibold">Growth Visualization - Coming Soon</h3></div>}
+          {currentView === 'learning' && <div className="bg-slate-800 rounded-lg p-6"><h3 className="text-xl font-semibold">Learning & Implementation - Coming Soon</h3></div>}
+          {currentView === 'focus' && <div className="bg-slate-800 rounded-lg p-6"><h3 className="text-xl font-semibold">Focus Zone - Coming Soon</h3></div>}
+          {currentView === 'minimalism' && <div className="bg-slate-800 rounded-lg p-6"><h3 className="text-xl font-semibold">Minimalism Guide - Coming Soon</h3></div>}
+          {currentView === 'community' && <div className="bg-slate-800 rounded-lg p-6"><h3 className="text-xl font-semibold">Brotherhood Community - Coming Soon</h3></div>}
+        </main>
+      </div>
+    </div>
+  );
+}
+
+  const renderMoodTracking = () => (
+    <div className="space-y-6">
+      <div className="bg-slate-800 rounded-lg p-6">
+        <h3 className="text-xl font-semibold mb-4 gradient-text">Mood Tracking</h3>
+        <div className="mb-6">
+          <h4 className="text-lg font-medium mb-3">How are you feeling right now?</h4>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4">
+            {moods.map((mood) => (
+              <button
+                key={mood.value}
+                onClick={() => setMoodToday(mood.value)}
+                className={`p-4 rounded-lg border-2 transition-all ${
+                  moodToday === mood.value
+                    ? `${mood.color} border-white`
+                    : 'border-slate-600 hover:border-slate-500'
+                }`}
+              >
+                <div className="text-center">
+                  <div className="text-3xl mb-2">{mood.emoji}</div>
+                  <div className="text-sm font-medium">{mood.label}</div>
+                </div>
+              </button>
+            ))}
+          </div>
+          <button
+            onClick={handleMoodSubmit}
+            disabled={!moodToday}
+            className="bg-blue-500 hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg transition-colors"
+          >
+            Save Mood
+          </button>
+        </div>
+      </div>
+
+      <div className="bg-slate-800 rounded-lg p-6">
+        <h4 className="text-lg font-medium mb-4">Weekly Mood Chart</h4>
+        <div className="space-y-2">
+          {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day, index) => (
+            <div key={day} className="flex items-center justify-between py-2">
+              <span className="text-gray-300">{day}</span>
+              <div className="flex space-x-1">
+                {[1, 2, 3, 4, 5].map((level) => (
+                  <div
+                    key={level}
+                    className={`w-4 h-4 rounded ${
+                      level <= Math.floor(Math.random() * 5) + 1
+                        ? 'bg-blue-500'
+                        : 'bg-slate-600'
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderJournaling = () => (
+    <div className="space-y-6">
+      <div className="bg-slate-800 rounded-lg p-6">
+        <h3 className="text-xl font-semibold mb-4 gradient-text">Journal Entry</h3>
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-2">What's on your mind today?</label>
+          <textarea
+            value={journalEntry}
+            onChange={(e) => setJournalEntry(e.target.value)}
+            className="w-full h-32 bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none resize-none"
+            placeholder="Write about your thoughts, feelings, or experiences..."
+          />
+        </div>
+        <button
+          onClick={handleJournalSave}
+          disabled={!journalEntry.trim()}
+          className="bg-teal-500 hover:bg-teal-600 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-2 rounded-lg transition-colors"
+        >
+          Save Entry
+        </button>
+      </div>
+
+      <div className="bg-slate-800 rounded-lg p-6">
+        <h4 className="text-lg font-medium mb-4">Reflection Prompts</h4>
+        <div className="space-y-3">
+          <div className="p-3 bg-slate-700 rounded-lg">
+            <p className="text-sm text-gray-300">What made you feel strongest today?</p>
+          </div>
+          <div className="p-3 bg-slate-700 rounded-lg">
+            <p className="text-sm text-gray-300">How did you handle stress or challenges?</p>
+          </div>
+          <div className="p-3 bg-slate-700 rounded-lg">
+            <p className="text-sm text-gray-300">What would you tell a friend going through this?</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderCommunity = () => (
+    <div className="space-y-6">
+      <div className="bg-slate-800 rounded-lg p-6">
+        <h3 className="text-xl font-semibold mb-4 gradient-text">Community Feed</h3>
+        <div className="space-y-4">
+          {communityPosts.map((post) => (
+            <div key={post.id} className="bg-slate-700 rounded-lg p-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="font-medium text-blue-400">{post.author}</span>
+                <span className="text-sm text-gray-400">{post.time}</span>
+              </div>
+              <p className="text-gray-300 mb-3">{post.content}</p>
+              <div className="flex items-center space-x-4 text-sm text-gray-400">
+                <button className="hover:text-red-400 transition-colors">
+                  ❤️ {post.likes}
+                </button>
+                <button className="hover:text-blue-400 transition-colors">
+                  💬 {post.comments}
+                </button>
+                <button className="hover:text-green-400 transition-colors">
+                  🤝 Support
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="bg-slate-800 rounded-lg p-6">
+        <h4 className="text-lg font-medium mb-4">Share Your Experience</h4>
+        <textarea
+          className="w-full h-24 bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none resize-none"
+          placeholder="Share something that might help other men..."
+        />
+        <button className="mt-3 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors">
+          Share Anonymously
+        </button>
+      </div>
+    </div>
+  );
+
+  if (!user) {
+    // Create a demo user for immediate access to features
+    const demoUser = {
+      id: 'demo-user',
+      displayName: 'Demo User',
+      email: 'demo@mindmate.com',
+      isAnonymous: false,
+      createdAt: new Date(),
+      lastLogin: new Date(),
+    };
+    
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+        {/* Header */}
+        <header className="bg-slate-800 border-b border-slate-700 px-6 py-4">
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <div className="h-8 w-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                🧠
+              </div>
+              <span className="text-xl font-bold gradient-text">MindMate</span>
+            </div>
+            
+            <div className="flex items-center space-x-4">
+              <span className="text-gray-300">
+                Welcome, {demoUser.displayName}
+              </span>
+              <button
+                onClick={() => window.location.href = '/'}
+                className="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg transition-colors"
+              >
+                Back to Home
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <div className="max-w-7xl mx-auto px-6 py-8 flex gap-8">
+          {/* Sidebar */}
+          <aside className="w-64 flex-shrink-0">
+            <nav className="bg-slate-800 rounded-lg p-4">
+              <ul className="space-y-2">
+                {[
+                  { id: 'overview', label: 'Overview', icon: '📊' },
+                  { id: 'mood', label: 'Mood Tracking', icon: '❤️' },
+                  { id: 'journal', label: 'Journaling', icon: '📝' },
+                  { id: 'community', label: 'Community', icon: '👥' }
+                ].map((item) => (
+                  <li key={item.id}>
+                    <button
+                      onClick={() => setCurrentView(item.id)}
+                      className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${
+                        currentView === item.id
+                          ? 'bg-blue-500 text-white'
+                          : 'text-gray-300 hover:bg-slate-700'
+                      }`}
+                    >
+                      <span className="mr-3">{item.icon}</span>
+                      {item.label}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </aside>
+
+          {/* Main Content */}
+          <main className="flex-1">
+            {currentView === 'overview' && renderOverview()}
+            {currentView === 'mood' && renderMoodTracking()}
+            {currentView === 'journal' && renderJournaling()}
+            {currentView === 'community' && renderCommunity()}
+          </main>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+      {/* Header */}
+      <header className="bg-slate-800 border-b border-slate-700 px-6 py-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <div className="h-8 w-8 bg-blue-500 rounded-lg flex items-center justify-center">
+              🧠
+            </div>
+            <span className="text-xl font-bold gradient-text">MindMate</span>
+          </div>
+          
+          <div className="flex items-center space-x-4">
+            <span className="text-gray-300">
+              Welcome, {user.displayName || 'Anonymous Warrior'}
+            </span>
+            <button
+              onClick={logout}
+              className="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg transition-colors"
+            >
+              Sign Out
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <div className="max-w-7xl mx-auto px-6 py-8 flex gap-8">
+        {/* Sidebar */}
+        <aside className="w-64 flex-shrink-0">
+          <nav className="bg-slate-800 rounded-lg p-4">
+            <ul className="space-y-2">
+              {[
+                { id: 'overview', label: 'Overview', icon: '📊' },
+                { id: 'mood', label: 'Mood Tracking', icon: '❤️' },
+                { id: 'journal', label: 'Journaling', icon: '📝' },
+                { id: 'community', label: 'Community', icon: '👥' }
+              ].map((item) => (
+                <li key={item.id}>
+                  <button
+                    onClick={() => setCurrentView(item.id)}
+                    className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${
+                      currentView === item.id
+                        ? 'bg-blue-500 text-white'
+                        : 'text-gray-300 hover:bg-slate-700'
+                    }`}
+                  >
+                    <span className="mr-3">{item.icon}</span>
+                    {item.label}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </aside>
+
+        {/* Main Content */}
+        <main className="flex-1">
+          {currentView === 'overview' && renderOverview()}
+          {currentView === 'mood' && renderMoodTracking()}
+          {currentView === 'journal' && renderJournaling()}
+          {currentView === 'community' && renderCommunity()}
+        </main>
+      </div>
+    </div>
+  );
+}

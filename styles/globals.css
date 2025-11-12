@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .gradient-text {
+    background: linear-gradient(135deg, #DC2626, #F59E0B, #10B981);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+  }
+  
+  .warrior-glow {
+    box-shadow: 0 0 20px rgba(220, 38, 38, 0.5);
+  }
+  
+  .tactical-border {
+    background: linear-gradient(45deg, #DC2626, #F59E0B);
+    padding: 1px;
+  }
+  
+  .tactical-border > div {
+    background: #111827;
+  }
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+
+body {
+  background-color: rgb(15 23 42);
+  color: rgb(255 255 255);
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.gradient-text {
+  background: linear-gradient(to right, rgb(59 130 246), rgb(20 184 166));
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
