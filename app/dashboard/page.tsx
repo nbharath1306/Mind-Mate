@@ -6,6 +6,12 @@ import { DisciplineMatrix } from '../../components/modules/DisciplineMatrix';
 import { WarLog } from '../../components/modules/WarLog';
 import { DailyStrength } from '../../components/modules/DailyStrength';
 import { IntelDashboard } from '../../components/modules/IntelDashboard';
+import { DailyGratitude } from '../../components/modules/DailyGratitude';
+import { KnowledgeArsenal } from '../../components/modules/KnowledgeArsenal';
+import FocusHelp from '../../components/modules/FocusHelp';
+import LearningsTracker from '../../components/modules/LearningsTracker';
+import AIRecommendations from '../../components/modules/AIRecommendations';
+import TacticalMinimalism from '../../components/modules/TacticalMinimalism';
 
 export default function Dashboard() {
   const { warrior, extract } = useAuth();
@@ -26,10 +32,13 @@ export default function Dashboard() {
   const navigationItems = [
     { id: 'command', label: 'COMMAND CENTER', icon: '▣', desc: 'Mission Control' },
     { id: 'strength', label: 'DAILY STRENGTH', icon: '⚔', desc: 'Mental Fortification' },
+    { id: 'gratitude', label: 'GRATITUDE PROTOCOL', icon: '🙏', desc: 'Mental Armor Building' },
     { id: 'discipline', label: 'DISCIPLINE MATRIX', icon: '◈', desc: 'Habit Formation' },
     { id: 'intel', label: 'BATTLE INTEL', icon: '▲', desc: 'Growth Analytics' },
     { id: 'warlog', label: 'WAR LOG', icon: '■', desc: 'Strategic Journal' },
     { id: 'arsenal', label: 'KNOWLEDGE ARSENAL', icon: '▼', desc: 'Tactical Reading' },
+    { id: 'learnings', label: 'TACTICAL INTEL', icon: '🎯', desc: 'Learning Tracker' },
+    { id: 'ai-rec', label: 'AI COMMAND', icon: '🤖', desc: 'AI Recommendations' },
     { id: 'brotherhood', label: 'BROTHERHOOD', icon: '◆', desc: 'Elite Network' },
     { id: 'focus', label: 'DEEP WORK', icon: '●', desc: 'Combat Focus' },
     { id: 'simplify', label: 'TACTICAL MINIMAL', icon: '◾', desc: 'Clarity Operations' }
@@ -302,25 +311,19 @@ export default function Dashboard() {
         <main className="flex-1">
           {currentView === 'command' && renderCommandCenter()}
           {currentView === 'strength' && <DailyStrength />}
+          {currentView === 'gratitude' && <DailyGratitude />}
           {currentView === 'discipline' && <DisciplineMatrix />}
           {currentView === 'intel' && <IntelDashboard />}
           {currentView === 'warlog' && <WarLog />}
-          {currentView === 'arsenal' && renderComingSoon(
-            'KNOWLEDGE ARSENAL',
-            'MISSION: Curated library of tactical reading materials focused on masculinity, mental toughness, leadership, and warrior philosophy.'
-          )}
+          {currentView === 'arsenal' && <KnowledgeArsenal />}
+          {currentView === 'learnings' && <LearningsTracker />}
+          {currentView === 'ai-rec' && <AIRecommendations />}
           {currentView === 'brotherhood' && renderComingSoon(
             'BROTHERHOOD NETWORK',
             'MISSION: Secure communication platform for elite warriors to share intelligence, provide tactical support, and execute group missions.'
           )}
-          {currentView === 'focus' && renderComingSoon(
-            'DEEP WORK PROTOCOLS',
-            'MISSION: Combat-level focus enhancement through tactical environments, distraction elimination, and deep work session management.'
-          )}
-          {currentView === 'simplify' && renderComingSoon(
-            'TACTICAL MINIMALISM',
-            'MISSION: Strategic simplification protocols for mental clarity, operational efficiency, and elimination of non-essential elements.'
-          )}
+          {currentView === 'focus' && <FocusHelp />}
+          {currentView === 'simplify' && <TacticalMinimalism />}
         </main>
       </div>
     </div>
