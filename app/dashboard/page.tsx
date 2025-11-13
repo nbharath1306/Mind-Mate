@@ -2,6 +2,10 @@
 
 import React, { useState } from 'react';
 import { useAuth } from '../../components/providers/AuthProvider';
+import { DisciplineMatrix } from '../../components/modules/DisciplineMatrix';
+import { WarLog } from '../../components/modules/WarLog';
+import { DailyStrength } from '../../components/modules/DailyStrength';
+import { IntelDashboard } from '../../components/modules/IntelDashboard';
 
 export default function Dashboard() {
   const { warrior, extract } = useAuth();
@@ -297,22 +301,10 @@ export default function Dashboard() {
         {/* Main Operations Area */}
         <main className="flex-1">
           {currentView === 'command' && renderCommandCenter()}
-          {currentView === 'strength' && renderComingSoon(
-            'DAILY STRENGTH MODULE',
-            'MISSION: Deploy daily psychological warfare tactics through strategic quotes, mental health intelligence, and warrior mindset reinforcement protocols.'
-          )}
-          {currentView === 'discipline' && renderComingSoon(
-            'DISCIPLINE MATRIX',
-            'MISSION: Advanced habit formation system with military-grade consistency tracking, streak analysis, and behavioral modification protocols.'
-          )}
-          {currentView === 'intel' && renderComingSoon(
-            'BATTLE INTELLIGENCE',
-            'MISSION: Real-time analytics dashboard showing personal growth metrics, performance trends, and strategic insights for continuous improvement.'
-          )}
-          {currentView === 'warlog' && renderComingSoon(
-            'WARRIOR LOG SYSTEM',
-            'MISSION: AI-enhanced tactical journal with scenario-based recommendations, strategic thinking prompts, and psychological warfare intelligence.'
-          )}
+          {currentView === 'strength' && <DailyStrength />}
+          {currentView === 'discipline' && <DisciplineMatrix />}
+          {currentView === 'intel' && <IntelDashboard />}
+          {currentView === 'warlog' && <WarLog />}
           {currentView === 'arsenal' && renderComingSoon(
             'KNOWLEDGE ARSENAL',
             'MISSION: Curated library of tactical reading materials focused on masculinity, mental toughness, leadership, and warrior philosophy.'
